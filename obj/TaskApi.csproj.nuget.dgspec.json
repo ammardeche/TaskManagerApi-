@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj": {}
+    "c:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj": {
+    "c:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj",
+        "projectUniqueName": "c:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj",
         "projectName": "TaskApi",
-        "projectPath": "C:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj",
+        "projectPath": "c:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\TaskApi.csproj",
         "packagesPath": "C:\\Users\\Surface\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\obj\\",
+        "outputPath": "c:\\Users\\Surface\\Desktop\\TaskApi\\TaskApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
