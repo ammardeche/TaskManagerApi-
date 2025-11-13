@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TaskApi.Data;
 using TaskApi.Interfaces;
 using TaskApi.Models;
@@ -16,34 +17,21 @@ namespace TaskApi.Repositories
         {
             _context = context;
         }
-        public async Task AddTask(TaskItem task)
-        {
-            await _context.TaskItems.AddAsync(task);
-            await _context.SaveChangesAsync();
-        }
 
-        public async Task DeleteTask(TaskItem task)
-        {
-            _context.TaskItems.Remove(task);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<TaskItem>> GetAllTasks(string userId)
-        {
-            var tasks = _context.TaskItems.Where(t => t.UserId == userId).ToList();
-            return tasks;
-        }
-
+        // add task
+        public async Task AddTask(TaskItem task) => await _context.TaskItems.AddAsync(task);
+        // delete task
+        public async Task DeleteTask(TaskItem task) => _context.TaskItems.Remove(task);
+        // get all tasks
+        public async Task<List<TaskItem>> GetAllTasks(string userId) => await _context.TaskItems.Include(c => c.Category).Where(t => t.UserId == userId).ToListAsync();
+        // get task by id
         public async Task<TaskItem?> GetTaskById(string taskId)
         {
-            var task = await _context.TaskItems.FindAsync(taskId);
-            return task;
+            return await _context.TaskItems.AsNoTracking()
+            .Include(c => c.Category)
+            .FirstOrDefaultAsync(i => i.Id == taskId);
         }
-
-        public async Task UpdateTask(TaskItem task)
-        {
-            _context.TaskItems.Update(task);
-            await _context.SaveChangesAsync();
-        }
+        // update task
+        public async Task UpdateTask(TaskItem task) => _context.TaskItems.Update(task);
     }
 }

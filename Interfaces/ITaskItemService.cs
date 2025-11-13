@@ -8,10 +8,10 @@ namespace TaskApi.Interfaces
 {
     public interface ITaskItemService
     {
-        Task<List<TaskItem>> GetAllTasks(string userId);
-        Task<TaskItem?> GetTaskById(string taskId, string userId);
-        Task AddTask(TaskItem task, string userId);
-        Task UpdateTask(TaskItem task, string userId);
-        Task DeleteTask(string taskId, string userId);
+        Task<List<TaskItem>> GetAllTasks();
+        Task<TaskItem?> GetTaskById(string taskId);
+        Task AddTask(string title, string description, DateTime createdAt, DateTime? dueDate, string categoryId, TaskStatus status);
+        Task UpdateTask(string title, string description, DateTime createdAt, DateTime? dueDate, string categoryId, string status);
+        Task DeleteTask(string taskId);
     }
 }

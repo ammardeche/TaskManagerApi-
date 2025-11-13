@@ -1,1 +1,19 @@
-{}
+{
+  // Keep regular VS Code IntelliSense enabled so you still get property/method suggestions (e.g. when typing `_context.`)
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.parameterHints.enabled": true,
+  // Use word-based suggestions from the current document
+  "editor.wordBasedSuggestions": "currentDocument",
+  // Keep built-in inline suggestions (AI-ish) off
+  "editor.inlineSuggest.enabled": false,
+
+  // Disable GitHub Copilot in this workspace (turn off AI autocomplete while keeping editor IntelliSense)
+  "github.copilot.enable": { "workspace": false },
+  "github.copilot.inlineSuggest.enable": false
+}
