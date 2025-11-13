@@ -28,6 +28,7 @@ namespace TaskApi.Data
         {
             base.OnModelCreating(builder);
             SeedRoleData.SeedRoles(builder);
+            SeedCategoryData.SeedCategory(builder);
             // relationship between User and TaskItem
             builder.Entity<User>()
             .HasMany(u => u.TaskItems)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskApi.Data;
 
@@ -11,9 +12,11 @@ using TaskApi.Data;
 namespace TaskApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113131847_UpdateTaskTable")]
+    partial class UpdateTaskTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,14 +177,12 @@ namespace TaskApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -189,44 +190,6 @@ namespace TaskApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            IsDefault = true,
-                            Name = "Personal"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            IsDefault = true,
-                            Name = "Work"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            IsDefault = true,
-                            Name = "Study"
-                        },
-                        new
-                        {
-                            Id = "4",
-                            IsDefault = true,
-                            Name = "Health"
-                        },
-                        new
-                        {
-                            Id = "5",
-                            IsDefault = true,
-                            Name = "Shopping"
-                        },
-                        new
-                        {
-                            Id = "6",
-                            IsDefault = true,
-                            Name = "Other"
-                        });
                 });
 
             modelBuilder.Entity("TaskApi.Models.TaskItem", b =>
@@ -396,7 +359,8 @@ namespace TaskApi.Migrations
                     b.HasOne("TaskApi.Models.User", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

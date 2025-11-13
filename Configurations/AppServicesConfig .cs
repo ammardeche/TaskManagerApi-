@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
 using TaskApi.Interfaces;
+using TaskApi.Models;
 using TaskApi.Repositories;
 using TaskApi.Services;
 
@@ -20,7 +21,10 @@ namespace TaskApi.Configurations
              .AddScoped<IAuthService, AuthService>()
              .AddHttpContextAccessor()
              .AddScoped<ICurrentUserService, CurrentUserService>()
-            .AddScoped<ITaskItemRepository, TaskItemRepository>();
+            .AddScoped<ITaskItemRepository, TaskItemRepository>()
+            .AddScoped<ITaskItemService, TaskItemService>()
+            .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<ICategoryRepository, CategoryRepository>();
             // return services;
 
             return services;

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskApi.Models;
 
-namespace TaskApi.Dtos
+namespace TaskApi.Repositories
 {
-    public class CreateUserDto
+    public class CategoryRepository : ICategoryRepository
     {
-        
+
     }
 }

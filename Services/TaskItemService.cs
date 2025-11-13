@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TaskApi.Data;
+using TaskApi.Enums;
 using TaskApi.Interfaces;
 using TaskApi.Models;
 
@@ -24,13 +25,43 @@ namespace TaskApi.Services
             _currentUserService = currentUserService;
         }
 
-        public async Task AddTask(string title, string description, DateTime createdAt, DateTime? dueDate, string categoryId, TaskStatus status)
+        // add task 
+        public async Task AddTask(string title, string description, DateTime startDate, DateTime? dueDate, string categoryId, TaskItemStatus status)
         {
+            // get user id 
             var user_id = _currentUserService.GetUserId();
 
 
-        }
 
+            if (startDate >= dueDate)
+            {
+                throw new ArgumentException("the start date must be before the due date ");
+            }
+            if (startDate >= DateTime.UtcNow.Date)
+            {
+                throw new ArgumentException("the start cannot be in the past  ");
+            }
+
+            // create new task 
+            var task = new TaskItem
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = title,
+                Description = description,
+                CategoryId = categoryId,
+                CreatedAt = DateTime.UtcNow,
+                DueDate = dueDate,
+                StartDate = startDate,
+                Status = status,
+                UserId = user_id
+            };
+
+            // send the task to the repository
+            await _taskItemRepository.AddTask(task);
+            //  save the changes 
+            await _context.SaveChangesAsync();
+        }
+        // delete task
         public async Task DeleteTask(string taskId)
         {
             var user_id = _currentUserService.GetUserId();
@@ -47,7 +78,7 @@ namespace TaskApi.Services
             await _context.SaveChangesAsync();
 
         }
-
+        // get all tasks 
         public Task<List<TaskItem>> GetAllTasks()
         {
             var user_Id = _currentUserService.GetUserId();
@@ -71,11 +102,54 @@ namespace TaskApi.Services
             return task;
 
         }
-
-        public async Task UpdateTask(string title, string description, DateTime createdAt, DateTime? dueDate, string categoryId, string status)
+        // update all tasks 
+        public async Task UpdateTask(string taskId, string title, string description, DateTime startDate, DateTime? dueDate, string categoryId, TaskItemStatus status)
         {
-            // check if the task item already exist 
-            return;
+            var user_Id = _currentUserService.GetUserId();
+
+            if (string.IsNullOrWhiteSpace(taskId))
+            {
+                throw new ArgumentException("Task id is required");
+            }
+
+
+            var task = await _taskItemRepository.GetTaskById(taskId);
+
+            if (task == null)
+            {
+                throw new KeyNotFoundException($"task with id {taskId} doesn't exist");
+            }
+
+            if (task.UserId != user_Id)
+            {
+                throw new UnauthorizedAccessException("you don't have permission to update this task");
+            }
+
+            if (task.Status == TaskItemStatus.Completed)
+            {
+                throw new InvalidOperationException("cannot update a completed task");
+            }
+
+            if (dueDate.HasValue && dueDate < DateTime.UtcNow)
+                throw new ArgumentException("Due date cannot be in the past");
+            if (startDate >= dueDate)
+            {
+                throw new ArgumentException("the start date must be before the due date ");
+            }
+            if (startDate >= DateTime.UtcNow.Date)
+            {
+                throw new ArgumentException("the start cannot be in the past  ");
+            }
+
+            task.Title = title;
+            task.Description = description;
+            task.DueDate = dueDate;
+            task.StartDate = startDate;
+            task.CategoryId = categoryId;
+            task.Status = status;
+
+            await _taskItemRepository.UpdateTask(task);
+            await _context.SaveChangesAsync();
         }
     }
 }

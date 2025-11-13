@@ -5,24 +5,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using TaskApi.Enums;
 
-namespace TaskApi.Models
+namespace TaskApi.Dtos
 {
-    public class TaskItem
+    public class CreateTaskDto
     {
-        [Key]
 
-        public string Id { get; set; } = null!;
-
+        [Required]
         public string Title { get; set; } = null!;
+        [Required]
+
         public string Description { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
+
         public DateTime? DueDate { get; set; }
+
         public TaskItemStatus Status { get; set; }
-        public string UserId { get; set; } = null!;
         public string CategoryId { get; set; } = null!;
-        public User? User { get; set; }
-        public Category? Category { get; set; }
 
     }
 }
