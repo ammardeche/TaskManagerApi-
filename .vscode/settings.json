@@ -8,6 +8,7 @@
   "editor.suggestOnTriggerCharacters": true,
   "editor.acceptSuggestionOnEnter": "on",
   "editor.parameterHints.enabled": true,
+  "editor.fontWeight": "normal",
   // Use word-based suggestions from the current document
   "editor.wordBasedSuggestions": "currentDocument",
   // Keep built-in inline suggestions (AI-ish) off

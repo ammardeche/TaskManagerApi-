@@ -4,7 +4,7 @@ namespace TaskApi.Enums
     {
         ToDo,
         InProgress,
-        Completed,
+        Completed = 2,
 
     }
 }

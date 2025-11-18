@@ -14,13 +14,26 @@ namespace TaskApi.Services
         // calculation for category
         public double CalculateCategoryProgress(Category category)
         {
-            if (category.TaskItems == null || !category.TaskItems.Any())
+            Console.WriteLine($"=== DEBUG CalculateCategoryProgress ===");
+            Console.WriteLine($"Category: {category.Name}");
+            Console.WriteLine($"TaskItems is null: {category.TaskItems == null}");
+            Console.WriteLine($"TaskItems count: {category.TaskItems?.Count ?? 0}");
 
+            if (category.TaskItems == null || !category.TaskItems.Any())
                 return 0;
-            // here we need to count the total tasks in the category
+
+            // Debug each task
+            foreach (var task in category.TaskItems)
+            {
+                Console.WriteLine($"Task: {task.Title}, Status: {task.Status} (Type: {task.Status.GetType()})");
+                Console.WriteLine($"Is Completed: {task.Status == TaskItemStatus.Completed}");
+            }
+
             var TotalTasks = category.TaskItems.Count();
-            // count the completed tasks in the category
             var completedTasks = category.TaskItems.Count(p => p.Status == TaskItemStatus.Completed);
+
+            Console.WriteLine($"Total: {TotalTasks}, Completed: {completedTasks}");
+            Console.WriteLine($"=== END DEBUG ===");
 
             return CalculateProgressPercentage(Total: TotalTasks, completed: completedTasks);
         }
@@ -32,9 +45,7 @@ namespace TaskApi.Services
         {
             return category?.TaskItems.Count() ?? 0;
         }
-
-
-        // today's tasks overall
+        // today's tasks overall 
         public double CountTodayCompletedTasks(List<TaskItem> tasks)
         {
             return tasks.Count(t => IsTaskFromToday(t) && t.Status == TaskItemStatus.Completed);
@@ -53,7 +64,6 @@ namespace TaskApi.Services
             return task.CreatedAt.Date == today;
 
         }
-
         // overall progress
         public double CalculateOverallProgress(List<Category> categories)
         {
@@ -67,10 +77,7 @@ namespace TaskApi.Services
 
             return CalculateProgressPercentage(completed: completedTasks, Total: totalTasks);
         }
-
-
         // private helper method - reusable progress calculation
-
         private double CalculateProgressPercentage(int completed, int Total)
         {
             if (Total == 0) return 0;

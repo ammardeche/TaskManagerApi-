@@ -24,6 +24,7 @@ namespace TaskApi.Configurations
             .AddScoped<ITaskItemRepository, TaskItemRepository>()
             .AddScoped<ITaskItemService, TaskItemService>()
             .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<IProgressCalculationService, ProgressCalculationService>()
             .AddScoped<ICategoryRepository, CategoryRepository>();
             // return services;
 

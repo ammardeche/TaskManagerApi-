@@ -27,5 +27,18 @@
         "/Views": "${workspaceFolder}/Views"
       }
     }
+      {
+        "name": ".NET Debug (breakpoints reliable)",
+        "type": "coreclr",
+        "request": "launch",
+        "program": "${workspaceFolder}/bin/Debug/net9.0/TaskApi.dll",
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "justMyCode": false,
+        "internalConsoleOptions": "openOnSessionStart"
+      }
   ]
 }

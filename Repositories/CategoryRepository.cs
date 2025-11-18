@@ -37,12 +37,11 @@ namespace TaskApi.Repositories
         .Where(p => p.Id == categoryId && (p.UserId == userId || p.UserId == null)).FirstOrDefaultAsync();
 
         public async Task<List<Category>> GetUserCategories(string userId)
-        => await _context.Categories.
-             Where(c => c.UserId == null || c.UserId == userId)
+        => await _context.Categories
+             .Include(t => t.TaskItems)
+             .Where(c => c.UserId == null || c.UserId == userId)
             .OrderBy(c => c.UserId) // Defaults first
             .ThenBy(c => c.Name)
             .ToListAsync();
-
-
     }
 }

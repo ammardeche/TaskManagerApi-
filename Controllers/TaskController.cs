@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace TaskApi.Controllers
         // inject the task item service 
 
         private readonly ITaskItemService _taskItemService;
+        private readonly ICurrentUserService _currentUserService;
 
 
-        public TaskController(ITaskItemService taskItemService)
+        public TaskController(ITaskItemService taskItemService, ICurrentUserService currentUserService)
         {
             _taskItemService = taskItemService;
+            _currentUserService = currentUserService;
         }
 
         [HttpPost("create-task")]
@@ -50,23 +53,30 @@ namespace TaskApi.Controllers
         }
 
 
-        public async Task<IActionResult> GetAllTasks()
-        {
-            return null;
-        }
+        // [NonAction]
+        // // public async Task<IActionResult> GetAllTasks()
+        // // {
+        // //     var userId =  _currentUserService.GetUserId();
+        // //     await _taskItemService.GetAllTasks(userId);
+        // // }
 
+
+        [NonAction]
         public async Task<IActionResult> DeleteTask()
         {
-            return null;
+            return null!;
         }
 
+        [NonAction]
         public async Task<IActionResult> UpdateTask()
         {
-            return null;
+            return null!;
         }
+
+        [NonAction]
         public async Task<IActionResult> GetTaskById()
         {
-            return null;
+            return null!;
         }
     }
 }

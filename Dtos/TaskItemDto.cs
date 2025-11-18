@@ -9,12 +9,12 @@ namespace TaskApi.Dtos
 {
     public class TaskItemDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime StartDate { get; set; }
-        public string Status { get; set; }
+        public TaskItemStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public TaskItemDto(TaskItem taskItem)
@@ -26,7 +26,7 @@ namespace TaskApi.Dtos
             Description = taskItem.Description;
             DueDate = taskItem.DueDate;
             StartDate = taskItem.StartDate;
-            Status = taskItem.Status.ToString();
+            Status = taskItem.Status;
             CreatedAt = taskItem.CreatedAt;
         }
     }

@@ -16,15 +16,16 @@ namespace TaskApi.Controllers
     {
 
         private readonly ICategoryService _categoryService;
+        private readonly IProgressCalculationService _progressCalculation;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IProgressCalculationService progressCalculation)
         {
             _categoryService = categoryService;
+            _progressCalculation = progressCalculation;
         }
 
         // fetch all categories 
         [HttpGet("get-user-categories")]
-
         public async Task<IActionResult> GetAllCategories()
         {
             var categories = await _categoryService.GetUserCategories();
@@ -55,7 +56,6 @@ namespace TaskApi.Controllers
         }
 
         [HttpPost("create-category")]
-
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto createCategoryDto)
         {
             await _categoryService.CreateCategory(name: createCategoryDto.Name);
@@ -63,12 +63,30 @@ namespace TaskApi.Controllers
         }
 
         [HttpDelete("{categoryId}")]
-
         public async Task<IActionResult> DeleteCategory(string categoryId)
         {
             await _categoryService.DeleteCategory(categoryId);
 
             return Ok("the category has been deleted successfully");
+        }
+
+        [HttpGet("progress")]
+        public async Task<IActionResult> GetCategoriesProgress()
+        {
+
+            try
+            {
+                var categories = await _categoryService.GetUserCategories();
+                var progressData = categories.Select(c => new CategoryProgressDto(c, _progressCalculation)).ToList();
+
+                return Ok(progressData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error calculating progress");
+            }
+
+
         }
 
     }

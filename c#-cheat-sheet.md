@@ -1,6 +1,9 @@
 ## collection check
 
 if(list?.Any() == true ) ==> this mean the list has an items
+
+<!--  [tsk , task2 .......... ] -->
+
 if(list?.Any() != true ) ==> this mean the list null or empty
 if (list == null || !list.Any()) // Explicit check
 
