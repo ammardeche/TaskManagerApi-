@@ -50,5 +50,23 @@ namespace TaskApi.Controllers
         }
 
 
+        public async Task<IActionResult> GetAllTasks()
+        {
+            return null;
+        }
+
+        public async Task<IActionResult> DeleteTask()
+        {
+            return null;
+        }
+
+        public async Task<IActionResult> UpdateTask()
+        {
+            return null;
+        }
+        public async Task<IActionResult> GetTaskById()
+        {
+            return null;
+        }
     }
 }
