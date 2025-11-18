@@ -13,16 +13,17 @@ namespace TaskApi.Services
 {
     public class TaskItemService : ITaskItemService
     {
-        private readonly ITaskItemRepository _taskItemRepository;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly ITaskItemRepository _taskItemRepository;
         private readonly ICurrentUserService _currentUserService;
-        public TaskItemService(ICurrentUserService currentUserService, ITaskItemRepository taskItemRepository, ApplicationDbContext context, UserManager<User> userManager)
+        private readonly ICategoryRepository _categoryRepository;
+
+        public TaskItemService(ICategoryRepository categoryRepository, ICurrentUserService currentUserService, ITaskItemRepository taskItemRepository, ApplicationDbContext context)
         {
-            _taskItemRepository = taskItemRepository;
             _context = context;
-            _userManager = userManager;
+            _taskItemRepository = taskItemRepository;
             _currentUserService = currentUserService;
+            _categoryRepository = categoryRepository;
         }
 
         // add task 
@@ -31,15 +32,17 @@ namespace TaskApi.Services
             // get user id 
             var user_id = _currentUserService.GetUserId();
 
+            // call the reusable validation method 
+            await ValidateCategoryAccess(categoryId, user_id);
 
-
+            // check the date 
             if (startDate >= dueDate)
             {
                 throw new ArgumentException("the start date must be before the due date ");
             }
             if (startDate >= DateTime.UtcNow.Date)
             {
-                throw new ArgumentException("the start cannot be in the past  ");
+                throw new ArgumentException("the start cannot be in the past");
             }
 
             // create new task 
@@ -111,19 +114,16 @@ namespace TaskApi.Services
             {
                 throw new ArgumentException("Task id is required");
             }
-
-
             var task = await _taskItemRepository.GetTaskById(taskId);
-
-            if (task == null)
+            // check if the task already exist and the user has a permission to update this task
+            if (task == null || task.UserId != user_Id)
             {
-                throw new KeyNotFoundException($"task with id {taskId} doesn't exist");
+                throw new UnauthorizedAccessException("task not found or access denied");
             }
 
-            if (task.UserId != user_Id)
-            {
-                throw new UnauthorizedAccessException("you don't have permission to update this task");
-            }
+            // call the reusable validation method for categories
+
+            await ValidateCategoryAccess(categoryId, user_Id);
 
             if (task.Status == TaskItemStatus.Completed)
             {
@@ -151,5 +151,17 @@ namespace TaskApi.Services
             await _taskItemRepository.UpdateTask(task);
             await _context.SaveChangesAsync();
         }
+
+        // Reusable validation method for category
+        public async Task ValidateCategoryAccess(string categoryId, string userId)
+        {
+            var categoryExist = await _categoryRepository.CategoryExists(categoryId, userId);
+
+            if (!categoryExist)
+            {
+                throw new ArgumentException("the category you are looking for doesn't exist or you don't have permission to access to this category");
+            }
+        }
+
     }
 }

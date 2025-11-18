@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Client;
 using TaskApi.Data;
@@ -53,14 +55,36 @@ namespace TaskApi.Services
 
         }
 
-        public Task DeleteCategory(string categoryId)
+        public async Task DeleteCategory(string categoryId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                throw new ArgumentException(" the category id it should be updated ");
+            }
+
+            var user_id = _currentUserService.GetUserId();
+
+            // we need to check if the category is exist 
+
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException("this category doesn't exist");
+            }
+
+            if (user_id != category.UserId)
+            {
+                throw new UnauthorizedAccessException("you don't have a permission to access to this category ");
+            }
+
+            await _categoryRepository.DeleteCategory(category: category);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Category> GetCategoryWithTasks(string categoryId)
         {
-            // here we need to check if the task already exist 
+            // here we need to check if the category id is null or empty 
             if (string.IsNullOrEmpty(categoryId))
                 throw new ArgumentException("the category id cannot be null or empty");
 
@@ -80,12 +104,11 @@ namespace TaskApi.Services
             return category;
         }
 
-        public Task<List<Category>> GetUserCategories()
+        public async Task<List<Category>> GetUserCategories()
         {
-            return null;
+            var user_id = _currentUserService.GetUserId();
+            return await _categoryRepository.GetUserCategories(user_id);
         }
+
     }
-
-
-
 }
