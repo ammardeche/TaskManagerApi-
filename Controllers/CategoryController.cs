@@ -22,27 +22,28 @@ namespace TaskApi.Controllers
             _categoryService = categoryService;
         }
 
-
         // fetch all categories 
         [HttpGet("get-user-categories")]
 
-        public async Task<IActionResult> getAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
             var categories = await _categoryService.GetUserCategories();
 
             return Ok(categories);
         }
         [HttpGet("{categoryId}/with-tasks")]
-        public async Task<IActionResult> getAllUserCategoriesWithTasks(string categoryId)
+        public async Task<IActionResult> GetAllUserCategoriesWithTasks(string categoryId)
         {
             try
             {
-                var categoryWithTasks = await _categoryService.GetCategoryWithTasks(categoryId);
+                var categoryEntity = await _categoryService.GetCategoryWithTasks(categoryId);
 
-                if (categoryWithTasks == null)
+                if (categoryEntity == null)
                 {
                     return NotFound();
                 }
+
+                var categoryWithTasks = new CategoryWithTasksDto(categoryEntity);
 
                 return Ok(categoryWithTasks);
             }
@@ -53,7 +54,22 @@ namespace TaskApi.Controllers
             }
         }
 
+        [HttpPost("create-category")]
 
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto createCategoryDto)
+        {
+            await _categoryService.CreateCategory(name: createCategoryDto.Name);
+            return Ok("The category has been created ");
+        }
+
+        [HttpDelete("{categoryId}")]
+
+        public async Task<IActionResult> DeleteCategory(string categoryId)
+        {
+            await _categoryService.DeleteCategory(categoryId);
+
+            return Ok("the category has been deleted successfully");
+        }
 
     }
 }

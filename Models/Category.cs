@@ -14,7 +14,7 @@ namespace TaskApi.Models
 
         public bool IsDefault { get; set; } = false;
 
-        public List<TaskItem> TaskItems { get; set; } = new List<TaskItem>();  
+        public List<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
         public string? UserId { get; set; } // Nullable for default categories
 
         public User? User { get; set; }
