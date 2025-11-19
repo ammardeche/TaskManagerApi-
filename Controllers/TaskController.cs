@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskApi.Dtos;
 using TaskApi.Interfaces;
+using TaskApi.Models;
 
 namespace TaskApi.Controllers
 {
@@ -18,12 +19,14 @@ namespace TaskApi.Controllers
 
         private readonly ITaskItemService _taskItemService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IProgressCalculationService _progressCalculationService;
 
 
-        public TaskController(ITaskItemService taskItemService, ICurrentUserService currentUserService)
+        public TaskController(IProgressCalculationService progressCalculationService, ITaskItemService taskItemService, ICurrentUserService currentUserService)
         {
             _taskItemService = taskItemService;
             _currentUserService = currentUserService;
+            _progressCalculationService = progressCalculationService;
         }
 
         [HttpPost("create-task")]
@@ -53,12 +56,13 @@ namespace TaskApi.Controllers
         }
 
 
-        // [NonAction]
-        // // public async Task<IActionResult> GetAllTasks()
-        // // {
-        // //     var userId =  _currentUserService.GetUserId();
-        // //     await _taskItemService.GetAllTasks(userId);
-        // // }
+        [HttpGet("tasks")]
+        public async Task<IActionResult> GetAllTasks()
+        {
+            var tasks = await _taskItemService.GetAllTasks();
+            var taskDto = tasks.Select(t => new TaskItemDto(t));
+            return Ok(taskDto);
+        }
 
 
         [NonAction]
@@ -77,6 +81,28 @@ namespace TaskApi.Controllers
         public async Task<IActionResult> GetTaskById()
         {
             return null!;
+        }
+
+        [HttpGet("statistic")]
+        public async Task<IActionResult> GetTasksStats()
+        {
+            try
+            {
+                var GetTasks = await _taskItemService.GetAllTasks();
+
+                var AllTasks = GetTasks.ToList();
+
+                var statistics = new GetTodayProgressDto(AllTasks, _progressCalculationService);
+
+                Console.WriteLine($"tasks =======> {AllTasks}");
+
+                return Ok(statistics);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("....");
+            }
         }
     }
 }

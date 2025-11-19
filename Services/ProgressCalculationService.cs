@@ -46,7 +46,7 @@ namespace TaskApi.Services
             return category?.TaskItems.Count() ?? 0;
         }
         // today's tasks overall 
-        public double CountTodayCompletedTasks(List<TaskItem> tasks)
+        public int CountTodayCompletedTasks(List<TaskItem> tasks)
         {
             return tasks.Count(t => IsTaskFromToday(t) && t.Status == TaskItemStatus.Completed);
         }
@@ -56,6 +56,11 @@ namespace TaskApi.Services
             return tasks.Count(t => IsTaskFromToday(t) && t.Status == TaskItemStatus.InProgress);
 
         }
+        public int CountTodayTotalTasks(List<TaskItem> tasks)
+        {
+            return tasks.Count(t => IsTaskFromToday(t));
+        }
+
         public bool IsTaskFromToday(TaskItem task)
         {
             // initialize today variables 

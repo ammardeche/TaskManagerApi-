@@ -152,6 +152,7 @@ namespace TaskApi.Services
             await _context.SaveChangesAsync();
         }
 
+
         // Reusable validation method for category
         public async Task ValidateCategoryAccess(string categoryId, string userId)
         {
@@ -162,6 +163,7 @@ namespace TaskApi.Services
                 throw new ArgumentException("the category you are looking for doesn't exist or you don't have permission to access to this category");
             }
         }
+
 
     }
 }

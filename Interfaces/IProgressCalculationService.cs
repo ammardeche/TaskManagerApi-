@@ -15,8 +15,9 @@ namespace TaskApi.Interfaces
 
         // today's tasks calculation 
 
-        double CountTodayCompletedTasks(List<TaskItem> tasks);
+        int CountTodayCompletedTasks(List<TaskItem> tasks);
         int CountTodayPendingTasks(List<TaskItem> tasks);
+        int CountTodayTotalTasks(List<TaskItem> tasks);
         bool IsTaskFromToday(TaskItem task);
 
         // Overall progress
