@@ -88,6 +88,7 @@ namespace TaskApi.Services
 
             return _taskItemRepository.GetAllTasks(user_Id);
         }
+
         // get task by id 
         public async Task<TaskItem?> GetTaskById(string taskId)
         {
@@ -105,7 +106,9 @@ namespace TaskApi.Services
             return task;
 
         }
+
         // update all tasks 
+
         public async Task UpdateTask(string taskId, string title, string description, DateTime startDate, DateTime? dueDate, string categoryId, TaskItemStatus status)
         {
             var user_Id = _currentUserService.GetUserId();
@@ -152,6 +155,20 @@ namespace TaskApi.Services
             await _context.SaveChangesAsync();
         }
 
+        // method for filter tasks by status 
+        public Task<List<TaskItem>> GetCompletedTasks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<TaskItem>> GetInProgressTasks()
+        {
+            throw new NotImplementedException();
+        }
+        public Task<List<TaskItem>> GetToDoTasks()
+        {
+            throw new NotImplementedException();
+        }
 
         // Reusable validation method for category
         public async Task ValidateCategoryAccess(string categoryId, string userId)

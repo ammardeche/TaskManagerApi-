@@ -5,6 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using TaskApi.Dtos;
 using TaskApi.Interfaces;
 using TaskApi.Models;
@@ -29,7 +30,7 @@ namespace TaskApi.Controllers
             _progressCalculationService = progressCalculationService;
         }
 
-        [HttpPost("create-task")]
+        [HttpPost()]
         [AllowAnonymous] // Remove this in production!
 
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto createTaskDto)
@@ -56,7 +57,7 @@ namespace TaskApi.Controllers
         }
 
 
-        [HttpGet("tasks")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllTasks()
         {
             var tasks = await _taskItemService.GetAllTasks();
@@ -65,22 +66,35 @@ namespace TaskApi.Controllers
         }
 
 
-        [NonAction]
-        public async Task<IActionResult> DeleteTask()
+        [HttpDelete("{categoryId}")]
+        public async Task<IActionResult> DeleteTask(string categoryId)
         {
-            return null!;
+
+            await _taskItemService.DeleteTask(categoryId);
+            return Ok("Task has been removed ");
         }
 
-        [NonAction]
-        public async Task<IActionResult> UpdateTask()
+        [HttpPut("{taskId}")]
+        public async Task<IActionResult> UpdateTask([FromRoute] string taskId, [FromBody] UpdateTaskDto updateTaskDto)
         {
-            return null!;
+            await _taskItemService.UpdateTask(
+                taskId: taskId,
+                title: updateTaskDto.Title,
+                description: updateTaskDto.Description,
+                status: updateTaskDto.Status,
+                dueDate: updateTaskDto.DueDate,
+                startDate: updateTaskDto.StartDate,
+                categoryId: updateTaskDto.CategoryId
+            );
+            return Ok("task has been updated ");
         }
 
-        [NonAction]
-        public async Task<IActionResult> GetTaskById()
+        [HttpGet("{taskId}")]
+        public async Task<IActionResult> GetTaskById(string taskId)
         {
-            return null!;
+            var task = await _taskItemService.GetTaskById(taskId);
+            var taskDto = new TaskItemDto(task);
+            return Ok(taskDto);
         }
 
         [HttpGet("statistic")]
