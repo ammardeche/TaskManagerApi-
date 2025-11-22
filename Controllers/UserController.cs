@@ -35,9 +35,9 @@ namespace TaskApi.Controllers
             try
             {
                 var result = await _userService.UpdateUserPassword(
-                    oldPassword: updateUserPasswordDto.CurrentPassword,
-                    newPassword: updateUserPasswordDto.NewPassword,
-                    confirmPassword: updateUserPasswordDto.ConfirmPassword);
+                    oldPassword: updateUserPasswordDto.CurrentPassword!,
+                    newPassword: updateUserPasswordDto.NewPassword!,
+                    confirmPassword: updateUserPasswordDto.ConfirmPassword!);
 
                 if (result.Succeeded)
                     return Ok("Password has been updated successfully");
