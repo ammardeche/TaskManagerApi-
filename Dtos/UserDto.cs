@@ -8,14 +8,14 @@ namespace TaskApi.Dtos
 {
     public class UserDto
     {
-        public string FullName { get; set; } = null!;
+        public string FullName { get; set; } = string.Empty;
 
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } = string.Empty;
 
         public UserDto(User user)
         {
             FullName = user.FullName;
-            Email = user.Email;
+            Email = user.Email!;
         }
     }
 }
