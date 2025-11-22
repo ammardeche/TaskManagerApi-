@@ -25,16 +25,6 @@ namespace TaskApi.Repositories
         public async Task DeleteTask(TaskItem task) => _context.TaskItems.Remove(task);
         // get all tasks
         public async Task<List<TaskItem>> GetAllTasks(string userId) => await _context.TaskItems.Include(c => c.Category).Where(t => t.UserId == userId).ToListAsync();
-
-        public async Task<List<TaskItem>> GetCompletedTasks(string UserId) =>
-        await _context.TaskItems.Include(c => c.Category).Where(t => t.Status == TaskItemStatus.Completed).ToListAsync();
-
-        public async Task<List<TaskItem>> GetInProgressTasks(string UserId) =>
-        await _context.TaskItems.Include(c => c.Category).Where(t => t.UserId == UserId && (t.Status == TaskItemStatus.InProgress)).ToListAsync();
-
-        public async Task<List<TaskItem>> GetToDoTasks(string UserId) =>
-        await _context.TaskItems.Include(c => c.Category).Where(t => t.UserId == UserId && (t.Status == TaskItemStatus.ToDo)).ToListAsync();
-
         // get task by id
         public async Task<TaskItem?> GetTaskById(string taskId)
         {
@@ -42,8 +32,6 @@ namespace TaskApi.Repositories
             .Include(c => c.Category)
             .FirstOrDefaultAsync(i => i.Id == taskId);
         }
-
-
 
         // update task
         public async Task UpdateTask(TaskItem task) => _context.TaskItems.Update(task);

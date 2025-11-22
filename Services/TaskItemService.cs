@@ -155,21 +155,6 @@ namespace TaskApi.Services
             await _context.SaveChangesAsync();
         }
 
-        // method for filter tasks by status 
-        public Task<List<TaskItem>> GetCompletedTasks()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<TaskItem>> GetInProgressTasks()
-        {
-            throw new NotImplementedException();
-        }
-        public Task<List<TaskItem>> GetToDoTasks()
-        {
-            throw new NotImplementedException();
-        }
-
         // Reusable validation method for category
         public async Task ValidateCategoryAccess(string categoryId, string userId)
         {

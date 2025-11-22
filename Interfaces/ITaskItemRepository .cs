@@ -14,10 +14,6 @@ namespace TaskApi.Interfaces
         Task UpdateTask(TaskItem task);
         Task DeleteTask(TaskItem task);
 
-        // endpoint for the filtered tasks
-        Task<List<TaskItem>> GetInProgressTasks(string UserId);
-        Task<List<TaskItem>> GetToDoTasks(string UserId);
-        Task<List<TaskItem>> GetCompletedTasks(string UserId);
 
     }
 }

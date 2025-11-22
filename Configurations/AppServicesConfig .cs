@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
+using TaskApi.Dtos;
 using TaskApi.Interfaces;
 using TaskApi.Models;
 using TaskApi.Repositories;
@@ -24,6 +25,8 @@ namespace TaskApi.Configurations
             .AddScoped<ITaskItemRepository, TaskItemRepository>()
             .AddScoped<ITaskItemService, TaskItemService>()
             .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IProgressCalculationService, ProgressCalculationService>()
             .AddScoped<ICategoryRepository, CategoryRepository>();
             // return services;

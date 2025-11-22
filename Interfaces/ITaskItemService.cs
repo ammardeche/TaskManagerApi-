@@ -15,9 +15,5 @@ namespace TaskApi.Interfaces
         Task UpdateTask(string taskId, string title, string description, DateTime startDate, DateTime? dueDate, string categoryId, TaskItemStatus status);
         Task DeleteTask(string taskId);
 
-
-        Task<List<TaskItem>> GetInProgressTasks();
-        Task<List<TaskItem>> GetToDoTasks();
-        Task<List<TaskItem>> GetCompletedTasks();
     }
 }
