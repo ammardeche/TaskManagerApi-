@@ -34,6 +34,8 @@ namespace TaskApi.Controllers
         {
             try
             {
+
+                // HERE WE USE THE DTO FOR THE PRESENTATION LAYER 
                 var result = await _userService.UpdateUserPassword(
                     oldPassword: updateUserPasswordDto.CurrentPassword!,
                     newPassword: updateUserPasswordDto.NewPassword!,
@@ -43,10 +45,14 @@ namespace TaskApi.Controllers
                     return Ok("Password has been updated successfully");
                 return BadRequest(result.Errors);
             }
+
+
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 using TaskApi.Configurations;
 using Scalar.AspNetCore;
+using TaskApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,10 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddAppServicesConfig();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevelopmentPolicy",
+        policy =>
+        {
+            policy.AllowAnyOrigin()  // Allows ALL origins (only for development!)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.AddApiConfig()
 .AddDbContextConfig()
 .AddIdentityConfig()
 .AddJwtConfig();
+
 
 var google = builder.Configuration.GetSection("Authentication:Google");
 builder.Services.AddAuthentication()
@@ -30,7 +43,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 
 }
-
+app.UseCors("DevelopmentPolicy");
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

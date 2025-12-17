@@ -47,36 +47,39 @@ namespace TaskApi.Services
             var userExists = await UserExistsAsync(Email);
             if (userExists)
             {
-                throw new KeyNotFoundException("user already exist");
+                throw new ApiException("This email already exists", 409); // StatusCode 409 for conflict
             }
+
             // check if password and confirm password match
             if (Password != ConfirmPassword)
             {
-                throw new ArgumentException("password and confirm password do not match");
+                throw new ApiException("Passwords do not match", 400); // StatusCode 400 for bad request
             }
+
             var user = new User
             {
                 UserName = Email,
                 Email = Email,
                 FullName = FullName,
             };
+
             var result = await _userManager.CreateAsync(user, Password);
             if (!result.Succeeded)
             {
-                var errors = string.Join(",", result.Errors.Select(u => u.Description));
-                throw new InvalidOperationException($"user creation failed: {errors}");
+                var errors = string.Join(", ", result.Errors.Select(u => u.Description));
+                throw new ApiException($"User creation failed: {errors}", 400); // StatusCode 400
             }
 
             var createRole = await _userManager.AddToRoleAsync(user, "User");
             if (!createRole.Succeeded)
             {
-                var errors = string.Join(",", createRole.Errors.Select(u => u.Description));
-                throw new InvalidOperationException($"role assignment failed: {errors}");
+                var errors = string.Join(", ", createRole.Errors.Select(u => u.Description));
+                throw new ApiException($"Role assignment failed: {errors}", 400); // StatusCode 400
             }
+
             var token = await _tokenService.createTokenAsync(user);
             return token;
         }
-
         public async Task<bool> UserExistsAsync(string Email)
         {
             var user = await _userManager.FindByEmailAsync(email: Email);
