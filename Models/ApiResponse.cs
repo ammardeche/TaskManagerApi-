@@ -5,36 +5,19 @@ using System.Threading.Tasks;
 
 namespace TaskApi.Models
 {
-    public class ApiResponse<T>
+    public class ApiResponse
     {
 
-        public bool Success { get; set; } // true if request succeeded 
-        public string Message { get; set; } // message for front end 
+        public int StatusCode { get; set; }
 
-        public T data { get; set; }
 
-        // static helper for success
-        public static ApiResponse<T> SuccesResponse(T data, string message = "")
+        public string Message { get; set; }
+
+
+        public ApiResponse(int statusCode, string message)
         {
-            return new ApiResponse<T>
-            {
-                Success = true,
-                data = data,
-                Message = message
-            };
-
-        }
-
-        // static helper for success
-        public static ApiResponse<T> ErrorResponse(string message)
-        {
-            return new ApiResponse<T>
-            {
-                Success = false,
-                data = default,
-                Message = message
-            };
-
+            StatusCode = statusCode;
+            Message = message;
         }
 
     }

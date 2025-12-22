@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TaskApi.Models;
 
 namespace TaskApi.Middlewares
 {
-    public class ExceptionMiddleware
+    public sealed class ExceptionMiddleware
     {
 
         private readonly RequestDelegate _next;
-
-
         public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -20,32 +19,38 @@ namespace TaskApi.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-
             try
             {
                 await _next(context);
             }
-            catch (ApiException ex)
+            catch (BadRequestException ex)
             {
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = ex.StatusCode; // This should now work correctly
-
-                var response = ApiResponse<object>.ErrorResponse(ex.Message);
-
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                await HandleException(context, HttpStatusCode.BadRequest, ex.Message);
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                // Log the exception here for debugging
-                // _logger.LogError(ex, "An unhandled exception occurred");
-
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = 500;
-
-                var response = ApiResponse<object>.ErrorResponse("Internal Server Error");
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                await HandleException(context, HttpStatusCode.NotFound, ex.Message);
+            }
+            catch (Exception)
+            {
+                await HandleException(context, HttpStatusCode.InternalServerError,
+                    "Something went wrong");
             }
         }
 
+        private static async Task HandleException(HttpContext context, HttpStatusCode statusCode, string message)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)statusCode;
+
+            var response = new ApiResponse(context.Response.StatusCode, message);
+
+            await context.Response.WriteAsync(
+         JsonSerializer.Serialize(response)
+     );
+
+        }
     }
+
+
 }

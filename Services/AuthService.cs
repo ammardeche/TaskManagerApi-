@@ -47,13 +47,14 @@ namespace TaskApi.Services
             var userExists = await UserExistsAsync(Email);
             if (userExists)
             {
-                throw new ApiException("This email already exists", 409); // StatusCode 409 for conflict
+                throw new BadRequestException("Email already exists");
+
             }
 
             // check if password and confirm password match
             if (Password != ConfirmPassword)
             {
-                throw new ApiException("Passwords do not match", 400); // StatusCode 400 for bad request
+                throw new BadRequestException("Passwords do not match");
             }
 
             var user = new User
@@ -67,14 +68,15 @@ namespace TaskApi.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(u => u.Description));
-                throw new ApiException($"User creation failed: {errors}", 400); // StatusCode 400
+                throw new BadRequestException(errors); // StatusCode 400
             }
 
             var createRole = await _userManager.AddToRoleAsync(user, "User");
             if (!createRole.Succeeded)
             {
                 var errors = string.Join(", ", createRole.Errors.Select(u => u.Description));
-                throw new ApiException($"Role assignment failed: {errors}", 400); // StatusCode 400
+                throw new BadRequestException(errors); // StatusCode 400
+
             }
 
             var token = await _tokenService.createTokenAsync(user);

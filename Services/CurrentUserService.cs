@@ -32,7 +32,7 @@ namespace TaskApi.Services
             var userId = _httpContextAccessor.HttpContext?.User?
             .FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // ✅ Temporary: Return test user if no authenticated user
+            //  Temporary: Return test user if no authenticated user
             if (string.IsNullOrEmpty(userId))
             {
                 // Use a real user ID from your database
